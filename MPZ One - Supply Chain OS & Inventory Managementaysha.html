@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)http://127.0.0.1:5500/index.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MPZ One - Supply Chain OS &amp; Inventory Management</title>
+  <meta name="description" content="Production-grade Supply Chain Management module including catalog master, multi-warehouse stock tracking, procurement workflows, and costing reports.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+  <link href="./MPZ One - Supply Chain OS &amp; Inventory Management_files/css2" rel="stylesheet">
+
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="./MPZ One - Supply Chain OS &amp; Inventory Management_files/all.min.css">
+
+  <!-- Application CSS -->
+  <link rel="stylesheet" href="./MPZ One - Supply Chain OS &amp; Inventory Management_files/styles.css">
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon">
+          <i class="fa-solid fa-boxes-packing"></i>
+        </div>
+        <span class="brand-title">SupplyChain OS</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a class="nav-item active" data-route="dashboard" id="nav-dashboard">
+          <i class="fa-solid fa-chart-line"></i>
+          <span class="nav-text">Dashboard</span>
+        </a>
+
+        <a class="nav-item" data-route="products" id="nav-products">
+          <i class="fa-solid fa-box-archive"></i>
+          <span class="nav-text">Product Master</span>
+        </a>
+
+        <a class="nav-item" data-route="stock" id="nav-stock">
+          <i class="fa-solid fa-cubes"></i>
+          <span class="nav-text">Stock &amp; Ledger</span>
+        </a>
+
+        <a class="nav-item" data-route="warehouses" id="nav-warehouses">
+          <i class="fa-solid fa-warehouse"></i>
+          <span class="nav-text">Warehouses &amp; Bins</span>
+        </a>
+
+        <a class="nav-item" data-route="purchasing" id="nav-purchasing">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span class="nav-text">Purchasing &amp; Suppliers</span>
+        </a>
+
+        <a class="nav-item" data-route="transfers" id="nav-transfers">
+          <i class="fa-solid fa-arrow-right-arrow-left"></i>
+          <span class="nav-text">Transfers &amp; Adjustments</span>
+        </a>
+
+        <a class="nav-item" data-route="costing" id="nav-costing">
+          <i class="fa-solid fa-sack-dollar"></i>
+          <span class="nav-text">Costing &amp; Valuation</span>
+        </a>
+
+        <a class="nav-item" data-route="reports" id="nav-reports">
+          <i class="fa-solid fa-file-invoice-dollar"></i>
+          <span class="nav-text">Reports Hub</span>
+        </a>
+
+        <a class="nav-item" data-route="settings" id="nav-settings">
+          <i class="fa-solid fa-gears"></i>
+          <span class="nav-text">Settings &amp; Integrations</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="system-status">
+          <span class="status-dot"></span>
+          <span>System Operational</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Sticky Header -->
+      <header class="top-header">
+        <div class="header-title-container">
+          <h1 id="header-page-title">Executive Inventory Dashboard</h1>
+          <p id="header-page-sub">Executive supply chain analytics, stock alerts, &amp; valuation summary</p>
+        </div>
+
+        <div class="header-actions">
+          <!-- Role Switcher -->
+          <div style="display: flex; align-items: center; background-color: var(--bg-secondary); padding: 4px 10px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <i class="fa-solid fa-user-tag" style="color: var(--accent-primary); margin-right: 8px;"></i>
+            <select class="select-control" id="global-role-switcher" style="padding: 4px 8px; border: none; background: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--text-main);">
+              <option value="Admin">Role: Admin</option>
+              <option value="Inventory Manager">Role: Inventory Manager</option>
+              <option value="Warehouse Staff">Role: Warehouse Staff</option>
+              <option value="Purchase Staff">Role: Purchase Staff</option>
+              <option value="Store Manager">Role: Store Manager</option>
+              <option value="View Only">Role: View Only</option>
+            </select>
+          </div>
+
+          <div class="quick-search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="global-quick-search" placeholder="Quick search SKU / Name...">
+          </div>
+
+          <button class="btn btn-secondary btn-sm" id="btn-reset-data" title="Reset to Sample Dataset">
+            <i class="fa-solid fa-rotate-left"></i> Reset Seed Data
+          </button>
+        </div>
+      </header>
+
+      <!-- View Containers -->
+      <main class="content-area">
+        <section id="view-dashboard" class="view-section active">
+    <!-- Top 4 Metrics Row -->
+    <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 24px;">
+      <div class="kpi-card kpi-blue">
+        <div class="kpi-header">
+          <span class="kpi-title">Total Active SKUs</span>
+          <div class="kpi-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+        </div>
+        <div class="kpi-value">5</div>
+        <div class="kpi-subtext"><i class="fa-solid fa-folder-tree"></i> Across 5 categories</div>
+      </div>
+
+      <div class="kpi-card kpi-green">
+        <div class="kpi-header">
+          <span class="kpi-title">Total Stock Value</span>
+          <div class="kpi-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+        </div>
+        <div class="kpi-value">$57,503.00</div>
+        <div class="kpi-subtext"><i class="fa-solid fa-hand-holding-dollar"></i> Cost Basis: $32,778</div>
+      </div>
+
+      <div class="kpi-card kpi-warning">
+        <div class="kpi-header">
+          <span class="kpi-title">Low Stock Items</span>
+          <div class="kpi-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        </div>
+        <div class="kpi-value">2</div>
+        <div class="kpi-subtext">Items below min threshold</div>
+      </div>
+
+      <div class="kpi-card kpi-danger">
+        <div class="kpi-header">
+          <span class="kpi-title">Out of Stock</span>
+          <div class="kpi-icon"><i class="fa-solid fa-circle-xmark"></i></div>
+        </div>
+        <div class="kpi-value">0</div>
+        <div class="kpi-subtext">Requires immediate order</div>
+      </div>
+    </div>
+
+    <!-- Secondary Metrics Row -->
+    <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-bottom: 24px;">
+      <div class="kpi-card" style="padding: 16px 20px;">
+        <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Overstock Items</div>
+        <div style="font-size: 1.4rem; font-weight: 700; margin-top: 4px; color: #818cf8;">0 Items</div>
+        <div style="font-size: 0.75rem; color: var(--text-subtle); margin-top: 2px;">Exceeding maximum caps</div>
+      </div>
+
+      <div class="kpi-card" style="padding: 16px 20px;">
+        <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Total Stock In</div>
+        <div style="font-size: 1.4rem; font-weight: 700; margin-top: 4px; color: var(--status-success);">+100 Units</div>
+        <div style="font-size: 0.75rem; color: var(--text-subtle); margin-top: 2px;">Procured &amp; adjusted items</div>
+      </div>
+
+      <div class="kpi-card" style="padding: 16px 20px;">
+        <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Total Stock Out</div>
+        <div style="font-size: 1.4rem; font-weight: 700; margin-top: 4px; color: var(--status-danger);">-50 Units</div>
+        <div style="font-size: 0.75rem; color: var(--text-subtle); margin-top: 2px;">Dispatched &amp; loss logs</div>
+      </div>
+
+      <div class="kpi-card" style="padding: 16px 20px;">
+        <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Pending Purchases</div>
+        <div style="font-size: 1.4rem; font-weight: 700; margin-top: 4px; color: var(--status-info);">2 POs</div>
+        <div style="font-size: 0.75rem; color: var(--text-subtle); margin-top: 2px;">Awaiting receipt delivery</div>
+      </div>
+
+      <div class="kpi-card" style="padding: 16px 20px;">
+        <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Pending Transfers</div>
+        <div style="font-size: 1.4rem; font-weight: 700; margin-top: 4px; color: var(--status-warning);">1 Transfers</div>
+        <div style="font-size: 0.75rem; color: var(--text-subtle); margin-top: 2px;">In-transit warehouse stock</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions Panel -->
+    <div class="card" style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(99, 102, 241, 0.1)); margin-bottom: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <h3 style="font-size: 1.05rem; font-weight: 700;"><i class="fa-solid fa-bolt" style="color: var(--status-warning); margin-right: 8px;"></i> Quick Inventory Actions</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Quick shortcut routes to initiate operational tasks.</p>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn btn-primary btn-sm" id="btn-quick-add"><i class="fa-solid fa-plus"></i> New Product</button>
+          <button class="btn btn-secondary btn-sm" id="btn-quick-transfer"><i class="fa-solid fa-truck-ramp-box"></i> Stock Transfer</button>
+          <button class="btn btn-secondary btn-sm" id="btn-quick-po"><i class="fa-solid fa-cart-shopping"></i> Raise PO</button>
+          <button class="btn btn-secondary btn-sm" id="btn-quick-adjust"><i class="fa-solid fa-sliders"></i> Stock Adjustment</button>
+          <button class="btn btn-secondary btn-sm" id="btn-quick-count"><i class="fa-solid fa-clipboard-check"></i> Physical Audit</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Two Column Dashboard Grid -->
+    <div class="dashboard-grid">
+      <!-- Left Column: Moving items & Critical Alerts -->
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        
+        <!-- Alerts Widget -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-bell-exclamation" style="color: var(--status-danger);"></i> Critical Stock Alerts</div>
+            <span class="badge badge-low-stock">3 Critical Alerts</span>
+          </div>
+
+          <div class="alert-list">
+            
+
+            
+              <div class="alert-item">
+                <div class="alert-info">
+                  <div style="background-color: var(--status-warning-bg); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--status-warning);"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                  <div class="alert-text">
+                    <h4>3-Phase AC Induction Motor 5.5kW</h4>
+                    <p>SKU: MACH-MTR-088 | Location: B-04-01</p>
+                  </div>
+                </div>
+                <span class="badge badge-low-stock">LOW STOCK: 8 left</span>
+              </div>
+            
+              <div class="alert-item">
+                <div class="alert-info">
+                  <div style="background-color: var(--status-warning-bg); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--status-warning);"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                  <div class="alert-text">
+                    <h4>ANSI Z89.1 Hard Hat with Visor Mount</h4>
+                    <p>SKU: PPE-HLM-202 | Location: S-03-09</p>
+                  </div>
+                </div>
+                <span class="badge badge-low-stock">LOW STOCK: 18 left</span>
+              </div>
+            
+
+            
+                <div class="alert-item" style="border-left-color: #f59e0b;">
+                  <div class="alert-info">
+                    <div style="background-color: rgba(245,158,11,0.15); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: #f59e0b;"><i class="fa-solid fa-hourglass-half"></i></div>
+                    <div class="alert-text">
+                      <h4>Batch BAT-PPE-26K - Expiring soon</h4>
+                      <p>Product: ANSI Z89.1 Hard Hat with Visor Mount | Expiry: 2026-10-15</p>
+                    </div>
+                  </div>
+                  <span class="badge badge-category" style="background-color: rgba(245,158,11,0.15); color: #f59e0b;">BATCH EXPIRY</span>
+                </div>
+              
+
+            
+          </div>
+        </div>
+
+        <!-- Product Performance Rankings -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-ranking-star"></i> Product Turn Performance</div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <!-- Top Moving -->
+            <div>
+              <h4 style="font-size: 0.85rem; color: var(--status-success); margin-bottom: 12px;"><i class="fa-solid fa-arrow-trend-up"></i> Top Moving Products</h4>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 8px 12px; border-radius: var(--radius-sm);">
+                  <div style="font-size: 0.85rem; font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:130px;">Industrial Optocoupler</div>
+                  <span style="font-size: 0.8rem; font-weight:700; color: var(--status-success);">High Turnover</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 8px 12px; border-radius: var(--radius-sm);">
+                  <div style="font-size: 0.85rem; font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:130px;">Shipping Boxes</div>
+                  <span style="font-size: 0.8rem; font-weight:700; color: var(--status-success);">Fast Moving</span>
+                </div>
+              </div>
+            </div>
+            <!-- Slow Moving -->
+            <div>
+              <h4 style="font-size: 0.85rem; color: var(--status-danger); margin-bottom: 12px;"><i class="fa-solid fa-arrow-trend-down"></i> Slow Moving / Aging</h4>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 8px 12px; border-radius: var(--radius-sm);">
+                  <div style="font-size: 0.85rem; font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:130px;">3-Phase AC Motor</div>
+                  <span style="font-size: 0.8rem; font-weight:700; color: var(--status-danger);">Aging: 60+ Days</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 8px 12px; border-radius: var(--radius-sm);">
+                  <div style="font-size: 0.85rem; font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:130px;">ANSI Hard Hat</div>
+                  <span style="font-size: 0.8rem; font-weight:700; color: var(--status-warning);">Low Velocity</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Recent Activity Ledger -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Live Supply Chain Logs</div>
+          <button class="btn btn-secondary btn-sm" id="btn-view-ledger-all">Ledger Hub</button>
+        </div>
+        
+        <div class="alert-list">
+          
+              <div style="background-color: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <span style="font-size: 0.725rem; color: var(--text-subtle);">2/2/2026, 3:30:00 pm</span>
+                  <h4 style="font-size: 0.85rem; font-weight: 700; margin-top: 2px;">Industrial Optocoupler Sensor Array</h4>
+                  <p style="font-size: 0.775rem; color: var(--text-muted); margin-top: 1px;">Ref: PO-2026-001 | Initial Shipment Received</p>
+                </div>
+                <div style="text-align: right;">
+                  <span style="font-size: 1rem; font-weight: 800; color: var(--status-success);">
+                    +100
+                  </span>
+                  <div style="font-size: 0.725rem; font-weight: 600;" class="badge badge-in-stock">RECEIPT</div>
+                </div>
+              </div>
+            
+              <div style="background-color: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <span style="font-size: 0.725rem; color: var(--text-subtle);">6/2/2026, 5:00:00 pm</span>
+                  <h4 style="font-size: 0.85rem; font-weight: 700; margin-top: 2px;">3-Phase AC Induction Motor 5.5kW</h4>
+                  <p style="font-size: 0.775rem; color: var(--text-muted); margin-top: 1px;">Ref: AUDIT | Damaged in transit</p>
+                </div>
+                <div style="text-align: right;">
+                  <span style="font-size: 1rem; font-weight: 800; color: var(--status-danger);">
+                    -2
+                  </span>
+                  <div style="font-size: 0.725rem; font-weight: 600;" class="badge badge-out-stock">ADJUSTMENT</div>
+                </div>
+              </div>
+            
+              <div style="background-color: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <span style="font-size: 0.725rem; color: var(--text-subtle);">15/2/2026, 8:50:00 pm</span>
+                  <h4 style="font-size: 0.85rem; font-weight: 700; margin-top: 2px;">316L Stainless Steel Precision Rods (20mm x 3m)</h4>
+                  <p style="font-size: 0.775rem; color: var(--text-muted); margin-top: 1px;">Ref: TR-2026-001 | Inter-warehouse rebalance</p>
+                </div>
+                <div style="text-align: right;">
+                  <span style="font-size: 1rem; font-weight: 800; color: var(--status-success);">
+                    +50
+                  </span>
+                  <div style="font-size: 0.725rem; font-weight: 600;" class="badge badge-in-stock">TRANSFER</div>
+                </div>
+              </div>
+            
+        </div>
+      </div>
+    </div>
+  </section>
+        <section id="view-products" class="view-section"></section>
+        <section id="view-stock" class="view-section"></section>
+        <section id="view-warehouses" class="view-section"></section>
+        <section id="view-purchasing" class="view-section"></section>
+        <section id="view-transfers" class="view-section"></section>
+        <section id="view-costing" class="view-section"></section>
+        <section id="view-reports" class="view-section"></section>
+        <section id="view-settings" class="view-section"></section>
+      </main>
+    </div>
+  </div>
+
+  <!-- App Main ES Module -->
+  <script type="module" src="./MPZ One - Supply Chain OS &amp; Inventory Management_files/app.js.download"></script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+
+
+</body></html>

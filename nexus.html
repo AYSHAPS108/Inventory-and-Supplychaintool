@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPZ One - Supply Chain OS & Inventory Management</title>
+    <meta name="description"
+        content="Production-grade Supply Chain Management module including catalog master, multi-warehouse stock tracking, procurement workflows, and costing reports.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Application CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-boxes-packing"></i>
+                </div>
+                <span class="brand-title">SupplyChain OS</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a class="nav-item active" data-route="dashboard" id="nav-dashboard">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+
+                <a class="nav-item" data-route="products" id="nav-products">
+                    <i class="fa-solid fa-box-archive"></i>
+                    <span class="nav-text">Product Master</span>
+                </a>
+
+                <a class="nav-item" data-route="stock" id="nav-stock">
+                    <i class="fa-solid fa-cubes"></i>
+                    <span class="nav-text">Stock & Ledger</span>
+                </a>
+
+                <a class="nav-item" data-route="warehouses" id="nav-warehouses">
+                    <i class="fa-solid fa-warehouse"></i>
+                    <span class="nav-text">Warehouses & Bins</span>
+                </a>
+
+                <a class="nav-item" data-route="purchasing" id="nav-purchasing">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="nav-text">Purchasing & Suppliers</span>
+                </a>
+
+                <a class="nav-item" data-route="transfers" id="nav-transfers">
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                    <span class="nav-text">Transfers & Adjustments</span>
+                </a>
+
+                <a class="nav-item" data-route="costing" id="nav-costing">
+                    <i class="fa-solid fa-sack-dollar"></i>
+                    <span class="nav-text">Costing & Valuation</span>
+                </a>
+
+                <a class="nav-item" data-route="reports" id="nav-reports">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                    <span class="nav-text">Reports Hub</span>
+                </a>
+
+                <a class="nav-item" data-route="settings" id="nav-settings">
+                    <i class="fa-solid fa-gears"></i>
+                    <span class="nav-text">Settings & Integrations</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <span class="status-dot"></span>
+                    <span>System Operational</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="main-wrapper">
+            <!-- Top Sticky Header -->
+            <header class="top-header">
+                <div class="header-title-container">
+                    <h1 id="header-page-title">Executive Dashboard</h1>
+                    <p id="header-page-sub">Executive supply chain analytics, stock alerts, & valuation summary</p>
+                </div>
+
+                <div class="header-actions">
+                    <!-- Role Switcher -->
+                    <div
+                        style="display: flex; align-items: center; background-color: var(--bg-secondary); padding: 4px 10px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                        <i class="fa-solid fa-user-tag" style="color: var(--accent-primary); margin-right: 8px;"></i>
+                        <select class="select-control" id="global-role-switcher"
+                            style="padding: 4px 8px; border: none; background: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--text-main);">
+                            <option value="Admin">Role: Admin</option>
+                            <option value="Inventory Manager">Role: Inventory Manager</option>
+                            <option value="Warehouse Staff">Role: Warehouse Staff</option>
+                            <option value="Purchase Staff">Role: Purchase Staff</option>
+                            <option value="Store Manager">Role: Store Manager</option>
+                            <option value="View Only">Role: View Only</option>
+                        </select>
+                    </div>
+
+                    <div class="quick-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="global-quick-search" placeholder="Quick search SKU / Name...">
+                    </div>
+
+                    <button class="btn btn-secondary btn-sm" id="btn-reset-data" title="Reset to Sample Dataset">
+                        <i class="fa-solid fa-rotate-left"></i> Reset Seed Data
+                    </button>
+                </div>
+            </header>
+
+            <!-- View Containers -->
+            <main class="content-area">
+                <section id="view-dashboard" class="view-section active"></section>
+                <section id="view-products" class="view-section"></section>
+                <section id="view-stock" class="view-section"></section>
+                <section id="view-warehouses" class="view-section"></section>
+                <section id="view-purchasing" class="view-section"></section>
+                <section id="view-transfers" class="view-section"></section>
+                <section id="view-costing" class="view-section"></section>
+                <section id="view-reports" class="view-section"></section>
+                <section id="view-settings" class="view-section"></section>
+            </main>
+        </div>
+    </div>
+
+    <!-- App Main ES Module -->
+    <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
