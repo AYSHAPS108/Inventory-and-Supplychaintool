@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "Supply Chain Frontend",
+    "slug": "supply-chain-frontend",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "supply-chain",
+    "userInterfaceStyle": "dark",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0f172a"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": ["expo-router"]
+  }
+}
