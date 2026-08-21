@@ -1,4 +1,6 @@
 import { Category } from '../categories/category.entity';
+import { Supplier } from '../suppliers/supplier.entity';
+import { Warehouse } from '../warehouses/warehouse.entity';
 export declare class Product {
     id: string;
     sku: string;
@@ -12,11 +14,18 @@ export declare class Product {
     quantity: number;
     minStock: number;
     maxStock: number;
+    reorderLevel: number;
+    reorderQty: number;
     unit: string;
-    supplier: string;
-    leadTimeDays: number;
+    supplierId: string;
+    supplier: Supplier;
+    warehouseId: string;
+    warehouse: Warehouse;
     locationBin: string;
     imageUrl: string;
+    hsnCode: string;
+    status: string;
+    variants: string;
     createdAt: Date;
     updatedAt: Date;
 }

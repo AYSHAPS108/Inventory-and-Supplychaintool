@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Product = void 0;
 const typeorm_1 = require("typeorm");
 const category_entity_1 = require("../categories/category.entity");
+const supplier_entity_1 = require("../suppliers/supplier.entity");
+const warehouse_entity_1 = require("../warehouses/warehouse.entity");
 let Product = class Product {
 };
 exports.Product = Product;
@@ -32,7 +34,7 @@ __decorate([
     __metadata("design:type", String)
 ], Product.prototype, "categoryId", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => category_entity_1.Category, (category) => category.products, { onDelete: 'RESTRICT' }),
+    (0, typeorm_1.ManyToOne)(() => category_entity_1.Category, { onDelete: 'RESTRICT' }),
     (0, typeorm_1.JoinColumn)({ name: 'category_id' }),
     __metadata("design:type", category_entity_1.Category)
 ], Product.prototype, "category", void 0);
@@ -61,21 +63,39 @@ __decorate([
     __metadata("design:type", Number)
 ], Product.prototype, "minStock", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ name: 'max_stock', type: 'int', default: 500 }),
+    (0, typeorm_1.Column)({ name: 'max_stock', type: 'int', default: 500, nullable: true }),
     __metadata("design:type", Number)
 ], Product.prototype, "maxStock", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'reorder_level', type: 'int', default: 30, nullable: true }),
+    __metadata("design:type", Number)
+], Product.prototype, "reorderLevel", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'reorder_qty', type: 'int', default: 100, nullable: true }),
+    __metadata("design:type", Number)
+], Product.prototype, "reorderQty", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 20, default: 'pcs' }),
     __metadata("design:type", String)
 ], Product.prototype, "unit", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 150, nullable: true }),
+    (0, typeorm_1.Column)({ name: 'supplier_id', type: 'varchar', length: 36, nullable: true }),
     __metadata("design:type", String)
+], Product.prototype, "supplierId", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => supplier_entity_1.Supplier, { onDelete: 'SET NULL', nullable: true }),
+    (0, typeorm_1.JoinColumn)({ name: 'supplier_id' }),
+    __metadata("design:type", supplier_entity_1.Supplier)
 ], Product.prototype, "supplier", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ name: 'lead_time_days', type: 'int', default: 7 }),
-    __metadata("design:type", Number)
-], Product.prototype, "leadTimeDays", void 0);
+    (0, typeorm_1.Column)({ name: 'warehouse_id', type: 'varchar', length: 36, nullable: true }),
+    __metadata("design:type", String)
+], Product.prototype, "warehouseId", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => warehouse_entity_1.Warehouse, { onDelete: 'SET NULL', nullable: true }),
+    (0, typeorm_1.JoinColumn)({ name: 'warehouse_id' }),
+    __metadata("design:type", warehouse_entity_1.Warehouse)
+], Product.prototype, "warehouse", void 0);
 __decorate([
     (0, typeorm_1.Column)({ name: 'location_bin', type: 'varchar', length: 50, nullable: true }),
     __metadata("design:type", String)
@@ -84,6 +104,18 @@ __decorate([
     (0, typeorm_1.Column)({ name: 'image_url', type: 'text', nullable: true }),
     __metadata("design:type", String)
 ], Product.prototype, "imageUrl", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'hsn_code', type: 'varchar', length: 15, nullable: true }),
+    __metadata("design:type", String)
+], Product.prototype, "hsnCode", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 20, default: 'Active' }),
+    __metadata("design:type", String)
+], Product.prototype, "status", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], Product.prototype, "variants", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({ name: 'created_at' }),
     __metadata("design:type", Date)

@@ -57,6 +57,12 @@ export class StockTransfersService {
     return this.transferRepository.save(transfer);
   }
 
+  async update(id: string, updateTransferDto: Partial<StockTransfer>): Promise<StockTransfer> {
+    const transfer = await this.findOne(id);
+    Object.assign(transfer, updateTransferDto);
+    return this.transferRepository.save(transfer);
+  }
+
   async approve(id: string, approvedBy?: string): Promise<StockTransfer> {
     const transfer = await this.findOne(id);
     if (transfer.status !== 'Pending Approval') {
@@ -96,7 +102,17 @@ export class StockTransfersService {
       // Create new SKU entry for destination warehouse
       const newProdId = 'prod-' + Date.now();
       destProduct = this.productRepository.create({
-        ...srcProduct,
+        sku: srcProduct.sku,
+        name: srcProduct.name,
+        categoryId: srcProduct.categoryId,
+        barcode: srcProduct.barcode,
+        description: srcProduct.description,
+        costPrice: Number(srcProduct.costPrice) || 0,
+        sellingPrice: Number(srcProduct.sellingPrice) || 0,
+        minStock: srcProduct.minStock,
+        maxStock: srcProduct.maxStock,
+        unit: srcProduct.unit,
+        supplierId: srcProduct.supplierId,
         id: newProdId,
         warehouseId: transfer.toWarehouseId,
         quantity: transfer.quantity,
