@@ -16,9 +16,13 @@ let currentRoute = 'dashboard';
 
 // ─── Theme: apply saved preference immediately to prevent flash ───
 (function initThemeEarly() {
-  const saved = localStorage.getItem('supplychain-theme');
-  if (saved === 'light') {
-    document.documentElement.setAttribute('data-theme', 'light');
+  try {
+    const saved = localStorage.getItem('supplychain-theme');
+    if (saved === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  } catch (e) {
+    console.warn('localStorage is not available for theme preference:', e);
   }
 })();
 
@@ -72,14 +76,22 @@ function bindThemeToggle() {
     if (isCurrentlyDark) {
       // Switch to light
       document.documentElement.setAttribute('data-theme', 'light');
-      localStorage.setItem('supplychain-theme', 'light');
+      try {
+        localStorage.setItem('supplychain-theme', 'light');
+      } catch (e) {
+        console.warn('Unable to persist theme choice:', e);
+      }
       themeIcon.classList.remove('fa-moon');
       themeIcon.classList.add('fa-sun');
       showToast('Switched to Light Mode ☀️', 'info');
     } else {
       // Switch to dark
       document.documentElement.removeAttribute('data-theme');
-      localStorage.setItem('supplychain-theme', 'dark');
+      try {
+        localStorage.setItem('supplychain-theme', 'dark');
+      } catch (e) {
+        console.warn('Unable to persist theme choice:', e);
+      }
       themeIcon.classList.remove('fa-sun');
       themeIcon.classList.add('fa-moon');
       showToast('Switched to Dark Mode 🌙', 'info');
