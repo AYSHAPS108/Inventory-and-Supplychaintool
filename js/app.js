@@ -14,6 +14,14 @@ import { renderSettingsView } from './components/settings.js';
 
 let currentRoute = 'dashboard';
 
+// ─── Theme: apply saved preference immediately to prevent flash ───
+(function initThemeEarly() {
+  const saved = localStorage.getItem('supplychain-theme');
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
   initApp();
 });
@@ -21,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function initApp() {
   bindNavigation();
   bindGlobalEvents();
+  bindThemeToggle();
   
   // Set default selected role in selector
   const role = store.getCurrentRole();
@@ -41,6 +50,45 @@ function bindNavigation() {
         navigateTo(route);
       }
     });
+  });
+}
+
+// ─── Theme Toggle ───
+function bindThemeToggle() {
+  const toggleBtn = document.querySelector('#theme-toggle');
+  const themeIcon = document.querySelector('#theme-icon');
+  if (!toggleBtn || !themeIcon) return;
+
+  // Set correct icon on load based on current theme
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  if (currentTheme === 'light') {
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    const isCurrentlyDark = document.documentElement.getAttribute('data-theme') !== 'light';
+
+    if (isCurrentlyDark) {
+      // Switch to light
+      document.documentElement.setAttribute('data-theme', 'light');
+      localStorage.setItem('supplychain-theme', 'light');
+      themeIcon.classList.remove('fa-moon');
+      themeIcon.classList.add('fa-sun');
+      showToast('Switched to Light Mode ☀️', 'info');
+    } else {
+      // Switch to dark
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('supplychain-theme', 'dark');
+      themeIcon.classList.remove('fa-sun');
+      themeIcon.classList.add('fa-moon');
+      showToast('Switched to Dark Mode 🌙', 'info');
+    }
+
+    // Animate the icon
+    themeIcon.classList.remove('spin-in');
+    void themeIcon.offsetWidth; // force reflow
+    themeIcon.classList.add('spin-in');
   });
 }
 
