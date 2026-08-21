@@ -43,7 +43,8 @@
 }
 
 /* ─── Light Mode Theme ─── */
-:root[data-theme="light"] {
+[data-theme="light"], :root[data-theme="light"] {
+  color-scheme: light;
   --bg-primary: #f1f5f9;
   --bg-secondary: #ffffff;
   --bg-card: rgba(255, 255, 255, 0.85);
