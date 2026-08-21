@@ -26,14 +26,17 @@ let currentRoute = 'dashboard';
   }
 })();
 
-document.addEventListener('DOMContentLoaded', () => {
-  initApp();
+document.addEventListener('DOMContentLoaded', async () => {
+  await initApp();
 });
 
-function initApp() {
+async function initApp() {
   bindNavigation();
   bindGlobalEvents();
   bindThemeToggle();
+  
+  // Synchronize local state with live backend database
+  await store.syncWithBackend();
   
   // Set default selected role in selector
   const role = store.getCurrentRole();

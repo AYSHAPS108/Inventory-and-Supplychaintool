@@ -26,7 +26,7 @@ export class CategoriesService {
   }
 
   async create(createCategoryDto: Partial<Category>): Promise<Category> {
-    const id = 'cat-' + Date.now();
+    const id = createCategoryDto.id || 'cat-' + Date.now();
     const category = this.categoriesRepository.create({ id, ...createCategoryDto });
     return this.categoriesRepository.save(category);
   }

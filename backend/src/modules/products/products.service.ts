@@ -26,7 +26,7 @@ export class ProductsService {
   }
 
   async create(createProductDto: Partial<Product>): Promise<Product> {
-    const id = 'prod-' + Date.now();
+    const id = createProductDto.id || 'prod-' + Date.now();
     const product = this.productsRepository.create({ id, ...createProductDto });
     return this.productsRepository.save(product);
   }
