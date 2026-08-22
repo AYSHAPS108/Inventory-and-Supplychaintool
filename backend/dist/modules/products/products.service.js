@@ -35,7 +35,7 @@ let ProductsService = class ProductsService {
         return product;
     }
     async create(createProductDto) {
-        const id = 'prod-' + Date.now();
+        const id = createProductDto.id || 'prod-' + Date.now();
         const product = this.productsRepository.create({ id, ...createProductDto });
         return this.productsRepository.save(product);
     }
