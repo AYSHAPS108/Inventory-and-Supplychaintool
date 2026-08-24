@@ -272,28 +272,136 @@ const SEED_SETTINGS = {
   costingMethod: 'Average Costing'
 };
 
+// ─── Backend API base URL (configurable) ───
+const BACKEND_BASE_URL = 'http://localhost:3000';
+
 class Store {
   constructor() {
+    this._backendOnline = false;
     this.init();
   }
 
   init() {
-    if (!localStorage.getItem(STORAGE_KEYS.CATEGORIES)) localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(SEED_CATEGORIES));
-    if (!localStorage.getItem(STORAGE_KEYS.SUBCATEGORIES)) localStorage.setItem(STORAGE_KEYS.SUBCATEGORIES, JSON.stringify(SEED_SUBCATEGORIES));
-    if (!localStorage.getItem(STORAGE_KEYS.BRANDS)) localStorage.setItem(STORAGE_KEYS.BRANDS, JSON.stringify(SEED_BRANDS));
-    if (!localStorage.getItem(STORAGE_KEYS.WAREHOUSES)) localStorage.setItem(STORAGE_KEYS.WAREHOUSES, JSON.stringify(SEED_WAREHOUSES));
-    if (!localStorage.getItem(STORAGE_KEYS.LOCATIONS)) localStorage.setItem(STORAGE_KEYS.LOCATIONS, JSON.stringify(SEED_LOCATIONS));
-    if (!localStorage.getItem(STORAGE_KEYS.SUPPLIERS)) localStorage.setItem(STORAGE_KEYS.SUPPLIERS, JSON.stringify(SEED_SUPPLIERS));
-    if (!localStorage.getItem(STORAGE_KEYS.PRODUCTS)) localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(SEED_PRODUCTS));
-    if (!localStorage.getItem(STORAGE_KEYS.MOVEMENTS)) localStorage.setItem(STORAGE_KEYS.MOVEMENTS, JSON.stringify(SEED_MOVEMENTS));
-    if (!localStorage.getItem(STORAGE_KEYS.TRANSFERS)) localStorage.setItem(STORAGE_KEYS.TRANSFERS, JSON.stringify(SEED_TRANSFERS));
-    if (!localStorage.getItem(STORAGE_KEYS.PURCHASE_ORDERS)) localStorage.setItem(STORAGE_KEYS.PURCHASE_ORDERS, JSON.stringify(SEED_PURCHASE_ORDERS));
-    if (!localStorage.getItem(STORAGE_KEYS.ADJUSTMENTS)) localStorage.setItem(STORAGE_KEYS.ADJUSTMENTS, JSON.stringify(SEED_ADJUSTMENTS));
-    if (!localStorage.getItem(STORAGE_KEYS.COUNTS)) localStorage.setItem(STORAGE_KEYS.COUNTS, JSON.stringify(SEED_COUNTS));
-    if (!localStorage.getItem(STORAGE_KEYS.BATCHES)) localStorage.setItem(STORAGE_KEYS.BATCHES, JSON.stringify(SEED_BATCHES));
-    if (!localStorage.getItem(STORAGE_KEYS.SERIALS)) localStorage.setItem(STORAGE_KEYS.SERIALS, JSON.stringify(SEED_SERIALS));
-    if (!localStorage.getItem(STORAGE_KEYS.SETTINGS)) localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(SEED_SETTINGS));
-    if (!localStorage.getItem(STORAGE_KEYS.CURRENT_ROLE)) localStorage.setItem(STORAGE_KEYS.CURRENT_ROLE, 'Admin');
+    if (!localStorage.getItem(STORAGE_KEYS.CATEGORIES))     localStorage.setItem(STORAGE_KEYS.CATEGORIES,      JSON.stringify(SEED_CATEGORIES));
+    if (!localStorage.getItem(STORAGE_KEYS.SUBCATEGORIES))  localStorage.setItem(STORAGE_KEYS.SUBCATEGORIES,   JSON.stringify(SEED_SUBCATEGORIES));
+    if (!localStorage.getItem(STORAGE_KEYS.BRANDS))         localStorage.setItem(STORAGE_KEYS.BRANDS,          JSON.stringify(SEED_BRANDS));
+    if (!localStorage.getItem(STORAGE_KEYS.WAREHOUSES))     localStorage.setItem(STORAGE_KEYS.WAREHOUSES,      JSON.stringify(SEED_WAREHOUSES));
+    if (!localStorage.getItem(STORAGE_KEYS.LOCATIONS))      localStorage.setItem(STORAGE_KEYS.LOCATIONS,       JSON.stringify(SEED_LOCATIONS));
+    if (!localStorage.getItem(STORAGE_KEYS.SUPPLIERS))      localStorage.setItem(STORAGE_KEYS.SUPPLIERS,       JSON.stringify(SEED_SUPPLIERS));
+    if (!localStorage.getItem(STORAGE_KEYS.PRODUCTS))       localStorage.setItem(STORAGE_KEYS.PRODUCTS,        JSON.stringify(SEED_PRODUCTS));
+    if (!localStorage.getItem(STORAGE_KEYS.MOVEMENTS))      localStorage.setItem(STORAGE_KEYS.MOVEMENTS,       JSON.stringify(SEED_MOVEMENTS));
+    if (!localStorage.getItem(STORAGE_KEYS.TRANSFERS))      localStorage.setItem(STORAGE_KEYS.TRANSFERS,       JSON.stringify(SEED_TRANSFERS));
+    if (!localStorage.getItem(STORAGE_KEYS.PURCHASE_ORDERS))localStorage.setItem(STORAGE_KEYS.PURCHASE_ORDERS, JSON.stringify(SEED_PURCHASE_ORDERS));
+    if (!localStorage.getItem(STORAGE_KEYS.ADJUSTMENTS))    localStorage.setItem(STORAGE_KEYS.ADJUSTMENTS,     JSON.stringify(SEED_ADJUSTMENTS));
+    if (!localStorage.getItem(STORAGE_KEYS.COUNTS))         localStorage.setItem(STORAGE_KEYS.COUNTS,          JSON.stringify(SEED_COUNTS));
+    if (!localStorage.getItem(STORAGE_KEYS.BATCHES))        localStorage.setItem(STORAGE_KEYS.BATCHES,         JSON.stringify(SEED_BATCHES));
+    if (!localStorage.getItem(STORAGE_KEYS.SERIALS))        localStorage.setItem(STORAGE_KEYS.SERIALS,         JSON.stringify(SEED_SERIALS));
+    if (!localStorage.getItem(STORAGE_KEYS.SETTINGS))       localStorage.setItem(STORAGE_KEYS.SETTINGS,        JSON.stringify(SEED_SETTINGS));
+    if (!localStorage.getItem(STORAGE_KEYS.CURRENT_ROLE))   localStorage.setItem(STORAGE_KEYS.CURRENT_ROLE,    'Admin');
+  }
+
+  /**
+   * Attempt to sync with the NestJS backend.
+   * Gracefully falls back to localStorage mode if the backend is unreachable.
+   * The frontend remains fully functional in offline/localStorage mode.
+   */
+  async syncWithBackend() {
+    try {
+      // Ping the backend with a short timeout
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 3000);
+
+      const [productsRes, categoriesRes, warehousesRes, suppliersRes] = await Promise.all([
+        fetch(`${BACKEND_BASE_URL}/api/products`,   { signal: controller.signal }),
+        fetch(`${BACKEND_BASE_URL}/api/categories`, { signal: controller.signal }),
+        fetch(`${BACKEND_BASE_URL}/api/warehouses`, { signal: controller.signal }),
+        fetch(`${BACKEND_BASE_URL}/api/suppliers`,  { signal: controller.signal }),
+      ]);
+      clearTimeout(timeout);
+
+      if (!productsRes.ok) throw new Error(`Backend returned ${productsRes.status}`);
+
+      const [products, categories, warehouses, suppliers] = await Promise.all([
+        productsRes.json(),
+        categoriesRes.json(),
+        warehousesRes.json(),
+        suppliersRes.json(),
+      ]);
+
+      // Normalize backend data to match frontend schema
+      const normalizedProducts = products.map(p => ({
+        id:           p.id,
+        sku:          p.sku,
+        name:         p.name,
+        categoryId:   p.categoryId || p.category_id,
+        supplierId:   p.supplierId || p.supplier_id,
+        warehouseId:  p.warehouseId || p.warehouse_id,
+        barcode:      p.barcode || '',
+        description:  p.description || '',
+        costPrice:    Number(p.costPrice  || p.cost_price  || 0),
+        sellingPrice: Number(p.sellingPrice || p.selling_price || 0),
+        quantity:     Number(p.quantity || 0),
+        minStock:     Number(p.minStock  || p.min_stock  || 10),
+        maxStock:     Number(p.maxStock  || p.max_stock  || 500),
+        reorderLevel: Number(p.reorderLevel || p.reorder_level || 30),
+        reorderQty:   Number(p.reorderQty   || p.reorder_qty   || 100),
+        unit:         p.unit || 'pcs',
+        locationBin:  p.locationBin  || p.location_bin || '',
+        imageUrl:     p.imageUrl     || p.image_url    || '',
+        image:        p.imageUrl     || p.image_url    || p.image || '',
+        hsnCode:      p.hsnCode      || p.hsn_code     || '',
+        status:       p.status       || 'Active',
+        variants:     p.variants     || '',
+        createdAt:    p.createdAt    || p.created_at   || new Date().toISOString(),
+        costHistory:  p.costHistory  || [{ date: p.createdAt || new Date().toISOString(), cost: Number(p.costPrice || 0), qty: Number(p.quantity || 0) }],
+      }));
+
+      // Update localStorage with backend data
+      this.setItem(STORAGE_KEYS.PRODUCTS,   normalizedProducts);
+      this.setItem(STORAGE_KEYS.CATEGORIES, categories.map(c => ({
+        id:          c.id,
+        name:        c.name,
+        code:        c.code,
+        description: c.description || '',
+        color:       c.color || '#165DFF',
+        icon:        c.icon  || 'fa-folder',
+      })));
+      this.setItem(STORAGE_KEYS.WAREHOUSES, warehouses.map(w => ({
+        id:        w.id,
+        name:      w.name,
+        code:      w.code,
+        address:   w.address   || '',
+        manager:   w.manager   || '',
+        phone:     w.phone     || '',
+        capacity:  w.capacity  || '',
+        status:    w.status    || 'Active',
+        isPrimary: w.isPrimary || w.is_primary || false,
+      })));
+      this.setItem(STORAGE_KEYS.SUPPLIERS, suppliers.map(s => ({
+        id:            s.id,
+        name:          s.name,
+        contactPerson: s.contactPerson || s.contact_person || '',
+        email:         s.email   || '',
+        phone:         s.phone   || '',
+        address:       s.address || '',
+        gstin:         s.gstin   || '',
+        leadTimeDays:  Number(s.leadTimeDays || s.lead_time_days || 7),
+        rating:        Number(s.rating || 5.0),
+        paymentTerms:  s.paymentTerms || s.payment_terms || 'Net 30',
+      })));
+
+      this._backendOnline = true;
+      console.info('[Zenora] ✅ Synced with backend. Products:', normalizedProducts.length);
+    } catch (err) {
+      // Backend not available — continue with localStorage data
+      this._backendOnline = false;
+      throw err; // Let app.js handle the graceful fallback message
+    }
+  }
+
+  /** Returns true if the NestJS backend was reachable on last sync */
+  isBackendOnline() {
+    return this._backendOnline;
   }
 
   generateSKU(categoryId, productName) {
@@ -805,23 +913,64 @@ class Store {
     }
   }
 
+  /**
+   * Compute top-moving products by total stock inflow (RECEIPT movements)
+   * @param {number} limit
+   * @returns {Array} sorted products with movementVolume
+   */
+  getTopMovingProducts(limit = 3) {
+    const movements = this.getMovements();
+    const products  = this.getProducts();
+
+    // Count inbound movement qty per product
+    const volumeMap = {};
+    movements.forEach(m => {
+      if (m.type === 'RECEIPT' || m.type === 'ADJUSTMENT_IN') {
+        volumeMap[m.productId] = (volumeMap[m.productId] || 0) + Math.abs(m.qty);
+      }
+    });
+
+    return products
+      .filter(p => volumeMap[p.id] !== undefined)
+      .sort((a, b) => (volumeMap[b.id] || 0) - (volumeMap[a.id] || 0))
+      .slice(0, limit)
+      .map(p => ({ ...p, movementVolume: volumeMap[p.id] || 0 }));
+  }
+
+  /**
+   * Compute slow/aging products — those with no inbound movement in last N days,
+   * or that are below reorder level, sorted by days since last movement.
+   * @param {number} limit
+   * @returns {Array}
+   */
+  getSlowMovingProducts(limit = 3) {
+    const movements = this.getMovements();
+    const products  = this.getProducts();
+    const now = Date.now();
+
+    // Find last movement date per product
+    const lastMovMap = {};
+    movements.forEach(m => {
+      const t = new Date(m.date).getTime();
+      if (!lastMovMap[m.productId] || t > lastMovMap[m.productId]) {
+        lastMovMap[m.productId] = t;
+      }
+    });
+
+    return products
+      .map(p => {
+        const lastMov = lastMovMap[p.id];
+        const daysSince = lastMov ? Math.floor((now - lastMov) / 86400000) : 999;
+        return { ...p, daysSinceLastMovement: daysSince };
+      })
+      .filter(p => p.daysSinceLastMovement > 30 || p.quantity <= p.minStock)
+      .sort((a, b) => b.daysSinceLastMovement - a.daysSinceLastMovement)
+      .slice(0, limit);
+  }
+
   resetToDefault() {
-    localStorage.removeItem(STORAGE_KEYS.PRODUCTS);
-    localStorage.removeItem(STORAGE_KEYS.CATEGORIES);
-    localStorage.removeItem(STORAGE_KEYS.SUBCATEGORIES);
-    localStorage.removeItem(STORAGE_KEYS.BRANDS);
-    localStorage.removeItem(STORAGE_KEYS.WAREHOUSES);
-    localStorage.removeItem(STORAGE_KEYS.LOCATIONS);
-    localStorage.removeItem(STORAGE_KEYS.SUPPLIERS);
-    localStorage.removeItem(STORAGE_KEYS.MOVEMENTS);
-    localStorage.removeItem(STORAGE_KEYS.TRANSFERS);
-    localStorage.removeItem(STORAGE_KEYS.PURCHASE_ORDERS);
-    localStorage.removeItem(STORAGE_KEYS.ADJUSTMENTS);
-    localStorage.removeItem(STORAGE_KEYS.COUNTS);
-    localStorage.removeItem(STORAGE_KEYS.BATCHES);
-    localStorage.removeItem(STORAGE_KEYS.SERIALS);
-    localStorage.removeItem(STORAGE_KEYS.SETTINGS);
-    localStorage.removeItem(STORAGE_KEYS.CURRENT_ROLE);
+    Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
+    this._backendOnline = false;
     this.init();
   }
 }

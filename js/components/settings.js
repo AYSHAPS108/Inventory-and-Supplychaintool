@@ -182,45 +182,60 @@ export function renderSettingsView(container, navigateTo, showToast) {
     if (activeTab === 'integrations') {
       return `
         <div class="card" style="margin-bottom:20px;">
-          <h3 style="font-size:0.95rem; font-weight:700; margin-bottom:12px;"><i class="fa-solid fa-network-wired"></i> System Integration Switches</h3>
-          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">Synchronize inventory stocks dynamically with POS stores, sales channels, invoicing tools, accounting programs, and payment processors.</p>
-          
+          <h3 style="font-size:0.95rem; font-weight:700; margin-bottom:8px;"><i class="fa-solid fa-network-wired"></i> System Integration Hub</h3>
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:6px;">
+            Connect Zenora with your existing business tools — POS, CRM, accounting, and payment platforms — for seamless inventory synchronization.
+          </p>
+          <div style="background:var(--status-info-bg); border:1px solid rgba(59,130,246,0.25); border-radius:var(--radius-md); padding:10px 14px; margin-bottom:20px; display:flex; align-items:center; gap:10px; font-size:0.82rem; color:var(--status-info);">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Integrations are configured via the <b>Settings API</b>. Contact your Zenora administrator to connect an external system.</span>
+          </div>
+
           <div style="display:flex; flex-direction:column; gap:14px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; background-color:var(--bg-primary); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+            <div style="display:flex; justify-content:space-between; align-items:center; background-color:var(--bg-primary); padding:14px 16px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
               <div>
-                <b style="font-size:0.85rem;">POS Stock Deduction sync (Inventory ↔ POS)</b>
-                <div style="font-size:0.75rem; color:var(--text-subtle); margin-top:2px;">Automatically decrements stock levels when point-of-sale store invoice prints.</div>
+                <b style="font-size:0.875rem;">POS Stock Deduction (Inventory ↔ POS)</b>
+                <div style="font-size:0.75rem; color:var(--text-subtle); margin-top:3px;">Automatically decrements stock when a point-of-sale invoice is printed.</div>
               </div>
-              <span class="badge badge-in-stock">CONNECTED</span>
+              <span class="badge" style="background:var(--bg-secondary); color:var(--text-muted); border:1px solid var(--border-color); white-space:nowrap;">
+                <i class="fa-regular fa-clock"></i> Integration Ready
+              </span>
             </div>
 
-            <div style="display:flex; justify-content:space-between; align-items:center; background-color:var(--bg-primary); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+            <div style="display:flex; justify-content:space-between; align-items:center; background-color:var(--bg-primary); padding:14px 16px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
               <div>
-                <b style="font-size:0.85rem;">CRM Sales Availability sync (Inventory ↔ CRM)</b>
-                <div style="font-size:0.75rem; color:var(--text-subtle); margin-top:2px;">Reserves items inside sales quotation pipeline, avoiding supply oversell.</div>
+                <b style="font-size:0.875rem;">CRM Sales Availability (Inventory ↔ CRM)</b>
+                <div style="font-size:0.75rem; color:var(--text-subtle); margin-top:3px;">Reserves items in the sales pipeline to prevent oversell.</div>
               </div>
-              <span class="badge badge-in-stock">CONNECTED</span>
+              <span class="badge" style="background:var(--bg-secondary); color:var(--text-muted); border:1px solid var(--border-color); white-space:nowrap;">
+                <i class="fa-regular fa-clock"></i> Integration Ready
+              </span>
             </div>
 
-            <div style="display:flex; justify-content:space-between; align-items:center; background-color:var(--bg-primary); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+            <div style="display:flex; justify-content:space-between; align-items:center; background-color:var(--bg-primary); padding:14px 16px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
               <div>
-                <b style="font-size:0.85rem;">Invoices & Accounting Ledgers sync (Inventory ↔ Finance)</b>
-                <div style="font-size:0.75rem; color:var(--text-subtle); margin-top:2px;">Automatically records COGS asset valuations inside balance sheets.</div>
+                <b style="font-size:0.875rem;">Accounting & Finance Ledgers (Inventory ↔ Finance)</b>
+                <div style="font-size:0.75rem; color:var(--text-subtle); margin-top:3px;">Records COGS and asset valuations directly into balance sheets.</div>
               </div>
-              <span class="badge badge-in-stock">CONNECTED</span>
+              <span class="badge" style="background:var(--bg-secondary); color:var(--text-muted); border:1px solid var(--border-color); white-space:nowrap;">
+                <i class="fa-regular fa-clock"></i> Integration Ready
+              </span>
             </div>
 
-            <div style="display:flex; justify-content:space-between; align-items:center; background-color:var(--bg-primary); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+            <div style="display:flex; justify-content:space-between; align-items:center; background-color:var(--bg-primary); padding:14px 16px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
               <div>
-                <b style="font-size:0.85rem;">HR Payroll Sync integration (Inventory ↔ HR)</b>
-                <div style="font-size:0.75rem; color:var(--text-subtle); margin-top:2px;">Connects warehouse manager shifts to payroll performance tracking systems.</div>
+                <b style="font-size:0.875rem;">HR Payroll Sync (Inventory ↔ HR)</b>
+                <div style="font-size:0.75rem; color:var(--text-subtle); margin-top:3px;">Links warehouse manager shifts to payroll performance tracking.</div>
               </div>
-              <span class="badge badge-category" style="background-color:rgba(255,255,255,0.05); color:var(--text-muted);">DISCONNECTED</span>
+              <span class="badge" style="background:var(--bg-secondary); color:var(--text-subtle); border:1px solid var(--border-color); white-space:nowrap;">
+                <i class="fa-solid fa-hourglass-half"></i> Coming Soon
+              </span>
             </div>
           </div>
         </div>
       `;
     }
+
   }
 
   function bindEvents() {

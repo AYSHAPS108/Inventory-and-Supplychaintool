@@ -1,149 +1,195 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MPZ One - Supply Chain OS & Inventory Management</title>
-    <meta name="description"
-        content="Production-grade Supply Chain Management module including catalog master, multi-warehouse stock tracking, procurement workflows, and costing reports.">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zenora Inventory &amp; Supply Chain — Work. Simplified.</title>
+  <meta name="description" content="Zenora Inventory &amp; Supply Chain — SME-focused inventory, procurement, warehouse and supply chain management. Work. Simplified.">
+  <meta name="theme-color" content="#050505">
+  <meta property="og:title" content="Zenora Inventory &amp; Supply Chain">
+  <meta property="og:description" content="Professional inventory and supply chain management for SMEs.">
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
-    <!-- FontAwesome 6 Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- Application CSS (Cache Busted) -->
-    <link rel="stylesheet" href="styles.css?v=2">
+  <!-- Zenora Design System CSS -->
+  <link rel="stylesheet" href="styles.css?v=3">
+
+  <!-- Apply theme ASAP to prevent flash -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('zenora-theme');
+        if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+      } catch (e) {}
+    })();
+  </script>
 </head>
 
 <body>
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="brand-icon">
-                    <i class="fa-solid fa-boxes-packing"></i>
-                </div>
-                <span class="brand-title">SupplyChain OS</span>
-            </div>
+  <!-- Mobile Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-            <nav class="sidebar-nav">
-                <a class="nav-item active" data-route="dashboard" id="nav-dashboard">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <span class="nav-text">Dashboard</span>
-                </a>
-
-                <a class="nav-item" data-route="products" id="nav-products">
-                    <i class="fa-solid fa-box-archive"></i>
-                    <span class="nav-text">Product Master</span>
-                </a>
-
-                <a class="nav-item" data-route="stock" id="nav-stock">
-                    <i class="fa-solid fa-cubes"></i>
-                    <span class="nav-text">Stock & Ledger</span>
-                </a>
-
-                <a class="nav-item" data-route="warehouses" id="nav-warehouses">
-                    <i class="fa-solid fa-warehouse"></i>
-                    <span class="nav-text">Warehouses & Bins</span>
-                </a>
-
-                <a class="nav-item" data-route="purchasing" id="nav-purchasing">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <span class="nav-text">Purchasing & Suppliers</span>
-                </a>
-
-                <a class="nav-item" data-route="transfers" id="nav-transfers">
-                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
-                    <span class="nav-text">Transfers & Adjustments</span>
-                </a>
-
-                <a class="nav-item" data-route="costing" id="nav-costing">
-                    <i class="fa-solid fa-sack-dollar"></i>
-                    <span class="nav-text">Costing & Valuation</span>
-                </a>
-
-                <a class="nav-item" data-route="reports" id="nav-reports">
-                    <i class="fa-solid fa-file-invoice-dollar"></i>
-                    <span class="nav-text">Reports Hub</span>
-                </a>
-
-                <a class="nav-item" data-route="settings" id="nav-settings">
-                    <i class="fa-solid fa-gears"></i>
-                    <span class="nav-text">Settings & Integrations</span>
-                </a>
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="system-status">
-                    <span class="status-dot"></span>
-                    <span>System Operational</span>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main Content Wrapper -->
-        <div class="main-wrapper">
-            <!-- Top Sticky Header -->
-            <header class="top-header">
-                <div class="header-title-container">
-                    <h1 id="header-page-title">Executive Dashboard</h1>
-                    <p id="header-page-sub">Executive supply chain analytics, stock alerts, & valuation summary</p>
-                </div>
-
-                <div class="header-actions">
-                    <!-- Theme Toggle -->
-                    <button class="theme-toggle-btn" id="theme-toggle" title="Toggle Light/Dark Mode">
-                        <i class="fa-solid fa-moon theme-icon" id="theme-icon"></i>
-                    </button>
-
-                    <!-- Role Switcher -->
-                    <div
-                        style="display: flex; align-items: center; background-color: var(--bg-secondary); padding: 4px 10px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-                        <i class="fa-solid fa-user-tag" style="color: var(--accent-primary); margin-right: 8px;"></i>
-                        <select class="select-control" id="global-role-switcher"
-                            style="padding: 4px 8px; border: none; background: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--text-main);">
-                            <option value="Admin">Role: Admin</option>
-                            <option value="Inventory Manager">Role: Inventory Manager</option>
-                            <option value="Warehouse Staff">Role: Warehouse Staff</option>
-                            <option value="Purchase Staff">Role: Purchase Staff</option>
-                            <option value="Store Manager">Role: Store Manager</option>
-                            <option value="View Only">Role: View Only</option>
-                        </select>
-                    </div>
-
-                    <div class="quick-search">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="global-quick-search" placeholder="Quick search SKU / Name...">
-                    </div>
-
-                    <button class="btn btn-secondary btn-sm" id="btn-reset-data" title="Reset to Sample Dataset">
-                        <i class="fa-solid fa-rotate-left"></i> Reset Seed Data
-                    </button>
-                </div>
-            </header>
-
-            <!-- View Containers -->
-            <main class="content-area">
-                <section id="view-dashboard" class="view-section active"></section>
-                <section id="view-products" class="view-section"></section>
-                <section id="view-stock" class="view-section"></section>
-                <section id="view-warehouses" class="view-section"></section>
-                <section id="view-purchasing" class="view-section"></section>
-                <section id="view-transfers" class="view-section"></section>
-                <section id="view-costing" class="view-section"></section>
-                <section id="view-reports" class="view-section"></section>
-                <section id="view-settings" class="view-section"></section>
-            </main>
+  <div class="app-container">
+    <!-- ─── Sidebar ─── -->
+    <aside class="sidebar" id="main-sidebar" role="navigation" aria-label="Main navigation">
+      <div class="sidebar-header">
+        <!-- Dark mode: use the dark-background Z icon -->
+        <img
+          src="Assets/zenora-icon-dark.png"
+          alt="Zenora Logo"
+          class="zenora-logo-icon zenora-logo-icon-dark"
+          width="36" height="36"
+        >
+        <!-- Light mode: use the light-background Z icon -->
+        <img
+          src="Assets/zenora-icon-light.png"
+          alt="Zenora Logo"
+          class="zenora-logo-icon zenora-logo-icon-light"
+          width="36" height="36"
+        >
+        <div class="brand-title">
+          <span class="brand-name">Zenora</span>
+          <span class="brand-sub">Inventory &amp; Supply Chain</span>
         </div>
-    </div>
+      </div>
 
-    <!-- App Main ES Module (Cache Busted) -->
-    <script type="module" src="js/app.js?v=2"></script>
+      <nav class="sidebar-nav" aria-label="Application navigation">
+        <a class="nav-item active" data-route="dashboard" id="nav-dashboard" role="button" tabindex="0" aria-label="Dashboard">
+          <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+          <span class="nav-text">Dashboard</span>
+        </a>
+
+        <a class="nav-item" data-route="products" id="nav-products" role="button" tabindex="0" aria-label="Product Master">
+          <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
+          <span class="nav-text">Product Master</span>
+        </a>
+
+        <a class="nav-item" data-route="stock" id="nav-stock" role="button" tabindex="0" aria-label="Stock and Ledger">
+          <i class="fa-solid fa-cubes" aria-hidden="true"></i>
+          <span class="nav-text">Stock &amp; Ledger</span>
+        </a>
+
+        <a class="nav-item" data-route="warehouses" id="nav-warehouses" role="button" tabindex="0" aria-label="Warehouses and Bins">
+          <i class="fa-solid fa-warehouse" aria-hidden="true"></i>
+          <span class="nav-text">Warehouses &amp; Bins</span>
+        </a>
+
+        <a class="nav-item" data-route="purchasing" id="nav-purchasing" role="button" tabindex="0" aria-label="Purchasing and Suppliers">
+          <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+          <span class="nav-text">Purchasing &amp; Suppliers</span>
+        </a>
+
+        <a class="nav-item" data-route="transfers" id="nav-transfers" role="button" tabindex="0" aria-label="Transfers and Adjustments">
+          <i class="fa-solid fa-arrow-right-arrow-left" aria-hidden="true"></i>
+          <span class="nav-text">Transfers &amp; Adjustments</span>
+        </a>
+
+        <a class="nav-item" data-route="costing" id="nav-costing" role="button" tabindex="0" aria-label="Costing and Valuation">
+          <i class="fa-solid fa-sack-dollar" aria-hidden="true"></i>
+          <span class="nav-text">Costing &amp; Valuation</span>
+        </a>
+
+        <a class="nav-item" data-route="reports" id="nav-reports" role="button" tabindex="0" aria-label="Reports Hub">
+          <i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i>
+          <span class="nav-text">Reports Hub</span>
+        </a>
+
+        <a class="nav-item" data-route="settings" id="nav-settings" role="button" tabindex="0" aria-label="Settings">
+          <i class="fa-solid fa-gears" aria-hidden="true"></i>
+          <span class="nav-text">Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="system-status" role="status" aria-live="polite">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>System Operational</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ─── Main Content Wrapper ─── -->
+    <div class="main-wrapper">
+      <!-- Top Sticky Header -->
+      <header class="top-header" role="banner">
+        <!-- Hamburger for mobile -->
+        <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="main-sidebar">
+          <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
+
+        <div class="header-title-container">
+          <h1 id="header-page-title">Inventory Dashboard</h1>
+          <p id="header-page-sub">Real-time stock levels, alerts &amp; supply chain overview</p>
+        </div>
+
+        <div class="header-actions">
+          <!-- Theme Toggle -->
+          <button class="theme-toggle-btn" id="theme-toggle" title="Toggle Light/Dark Mode" aria-label="Toggle theme">
+            <i class="fa-solid fa-moon theme-icon" id="theme-icon" aria-hidden="true"></i>
+          </button>
+
+          <!-- Role Switcher -->
+          <div class="role-switcher-wrapper">
+            <i class="fa-solid fa-user-tag" style="color: var(--accent-primary); font-size: 0.85rem;" aria-hidden="true"></i>
+            <select
+              class="select-control"
+              id="global-role-switcher"
+              style="padding: 4px 6px; border: none; background: none; font-size: 0.82rem; font-weight: 600; cursor: pointer; color: var(--text-main);"
+              aria-label="Switch user role"
+            >
+              <option value="Admin">Admin</option>
+              <option value="Inventory Manager">Inventory Manager</option>
+              <option value="Warehouse Staff">Warehouse Staff</option>
+              <option value="Purchase Staff">Purchase Staff</option>
+              <option value="Store Manager">Store Manager</option>
+              <option value="View Only">View Only</option>
+            </select>
+          </div>
+
+          <!-- Global Search -->
+          <div class="quick-search" role="search">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input
+              type="search"
+              id="global-quick-search"
+              placeholder="Search SKU / Name..."
+              aria-label="Quick search by SKU or product name"
+              autocomplete="off"
+            >
+          </div>
+
+          <!-- Reset Data Button -->
+          <button class="btn btn-secondary btn-sm" id="btn-reset-data" title="Reset to Sample Dataset" aria-label="Reset to default seed data">
+            <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+            <span class="hide-mobile">Reset Data</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- View Containers -->
+      <main class="content-area" role="main" id="main-content">
+        <section id="view-dashboard"  class="view-section active" aria-label="Dashboard view"></section>
+        <section id="view-products"   class="view-section" aria-label="Products view"></section>
+        <section id="view-stock"      class="view-section" aria-label="Stock and ledger view"></section>
+        <section id="view-warehouses" class="view-section" aria-label="Warehouses view"></section>
+        <section id="view-purchasing" class="view-section" aria-label="Purchasing view"></section>
+        <section id="view-transfers"  class="view-section" aria-label="Transfers view"></section>
+        <section id="view-costing"    class="view-section" aria-label="Costing view"></section>
+        <section id="view-reports"    class="view-section" aria-label="Reports view"></section>
+        <section id="view-settings"   class="view-section" aria-label="Settings view"></section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Zenora App — ES Module Entry Point -->
+  <script type="module" src="js/app.js?v=3"></script>
 </body>
 
 </html>

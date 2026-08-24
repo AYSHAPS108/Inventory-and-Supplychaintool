@@ -1,19 +1,33 @@
 /**
- * Executive Inventory & Supply Chain Dashboard
+ * ZENORA INVENTORY & SUPPLY CHAIN
+ * Executive Inventory Dashboard Component
  */
 import { store } from '../store.js';
 
 export function renderDashboardView(container, navigateTo, showToast) {
-  const metrics = store.getMetrics();
-  const products = store.getProducts();
+  const metrics   = store.getMetrics();
+  const products  = store.getProducts();
   const movements = store.getMovements();
-  const pos = store.getPurchaseOrders();
-  const transfers = store.getTransfers();
-  const batches = store.getBatches();
-  
-  // Calculate stock-in and stock-out counts from movements
-  const stockInCount = movements.filter(m => m.type === 'RECEIPT' || m.type === 'ADJUSTMENT_IN').reduce((sum, m) => sum + Math.abs(m.qty), 0);
-  const stockOutCount = movements.filter(m => m.type === 'DISPATCHED' || m.type === 'ADJUSTMENT_OUT' || (m.type === 'TRANSFER' && m.qty > 0)).reduce((sum, m) => sum + Math.abs(m.qty), 0);
+  const batches   = store.getBatches();
+  const settings  = store.getSettings();
+  const warehouses = store.getWarehouses();
+
+  const currencySymbol = settings.currency ? settings.currency.match(/[\$€£₹]/)?.[0] || '$' : '$';
+
+  // Movement totals
+  const stockInCount  = movements
+    .filter(m => m.type === 'RECEIPT' || m.type === 'ADJUSTMENT_IN')
+    .reduce((sum, m) => sum + Math.abs(m.qty), 0);
+  const stockOutCount = movements
+    .filter(m => m.type === 'DISPATCHED' || m.type === 'ADJUSTMENT_OUT')
+    .reduce((sum, m) => sum + Math.abs(m.qty), 0);
+
+  // Dynamic product performance
+  const topMoving  = store.getTopMovingProducts(3);
+  const slowMoving = store.getSlowMovingProducts(3);
+
+  // Reorder suggestions — products at or below reorder level
+  const reorderNeeded = products.filter(p => Number(p.quantity) <= Number(p.reorderLevel || p.minStock)).slice(0, 5);
 
   // Critical alerts
   const lowStockItems = products.filter(p => p.quantity > 0 && p.quantity <= p.minStock);
@@ -101,18 +115,18 @@ export function renderDashboardView(container, navigateTo, showToast) {
     </div>
 
     <!-- Quick Actions Panel -->
-    <div class="card" style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(99, 102, 241, 0.1)); margin-bottom: 24px;">
+    <div class="card" style="background: linear-gradient(135deg, rgba(18,63,168,0.12), rgba(22,93,255,0.06)); border-color: rgba(22,93,255,0.2); margin-bottom: 24px;">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
         <div>
-          <h3 style="font-size: 1.05rem; font-weight: 700;"><i class="fa-solid fa-bolt" style="color: var(--status-warning); margin-right: 8px;"></i> Quick Inventory Actions</h3>
-          <p style="font-size: 0.8rem; color: var(--text-muted);">Quick shortcut routes to initiate operational tasks.</p>
+          <h3 style="font-size: 1rem; font-weight: 700; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-bolt" style="color: var(--status-warning);"></i> Quick Actions</h3>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">Shortcuts to common inventory operations.</p>
         </div>
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <button class="btn btn-primary btn-sm" id="btn-quick-add"><i class="fa-solid fa-plus"></i> New Product</button>
-          <button class="btn btn-secondary btn-sm" id="btn-quick-transfer"><i class="fa-solid fa-truck-ramp-box"></i> Stock Transfer</button>
-          <button class="btn btn-secondary btn-sm" id="btn-quick-po"><i class="fa-solid fa-cart-shopping"></i> Raise PO</button>
-          <button class="btn btn-secondary btn-sm" id="btn-quick-adjust"><i class="fa-solid fa-sliders"></i> Stock Adjustment</button>
-          <button class="btn btn-secondary btn-sm" id="btn-quick-count"><i class="fa-solid fa-clipboard-check"></i> Physical Audit</button>
+          <button class="btn btn-primary btn-sm" id="btn-quick-add"><i class="fa-solid fa-plus" aria-hidden="true"></i> New Product</button>
+          <button class="btn btn-secondary btn-sm" id="btn-quick-transfer"><i class="fa-solid fa-truck-ramp-box" aria-hidden="true"></i> Transfer Stock</button>
+          <button class="btn btn-secondary btn-sm" id="btn-quick-po"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> Raise PO</button>
+          <button class="btn btn-secondary btn-sm" id="btn-quick-adjust"><i class="fa-solid fa-sliders" aria-hidden="true"></i> Adjust Stock</button>
+          <button class="btn btn-secondary btn-sm" id="btn-quick-count"><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i> Stock Count</button>
         </div>
       </div>
     </div>
@@ -181,42 +195,80 @@ export function renderDashboardView(container, navigateTo, showToast) {
           </div>
         </div>
 
-        <!-- Product Performance Rankings -->
+        <!-- Product Performance Rankings (Dynamic) -->
         <div class="card">
           <div class="card-header">
-            <div class="card-title"><i class="fa-solid fa-ranking-star"></i> Product Turn Performance</div>
+            <div class="card-title"><i class="fa-solid fa-ranking-star"></i> Product Velocity Ranking</div>
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <!-- Top Moving -->
             <div>
-              <h4 style="font-size: 0.85rem; color: var(--status-success); margin-bottom: 12px;"><i class="fa-solid fa-arrow-trend-up"></i> Top Moving Products</h4>
+              <h4 style="font-size: 0.82rem; color: var(--status-success); margin-bottom: 12px; display:flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-arrow-trend-up"></i> Top Moving
+              </h4>
               <div style="display: flex; flex-direction: column; gap: 8px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 8px 12px; border-radius: var(--radius-sm);">
-                  <div style="font-size: 0.85rem; font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:130px;">Industrial Optocoupler</div>
-                  <span style="font-size: 0.8rem; font-weight:700; color: var(--status-success);">High Turnover</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 8px 12px; border-radius: var(--radius-sm);">
-                  <div style="font-size: 0.85rem; font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:130px;">Shipping Boxes</div>
-                  <span style="font-size: 0.8rem; font-weight:700; color: var(--status-success);">Fast Moving</span>
-                </div>
+                ${topMoving.length > 0
+                  ? topMoving.map(p => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-primary); padding:8px 12px; border-radius:var(--radius-sm); gap:8px;">
+                      <div style="font-size:0.82rem; font-weight:600; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; flex:1;" title="${p.name}">${p.name}</div>
+                      <span style="font-size:0.75rem; font-weight:700; color:var(--status-success); white-space:nowrap;">${p.movementVolume} units</span>
+                    </div>
+                  `).join('')
+                  : `<div style="font-size:0.82rem; color:var(--text-subtle); padding:8px;">No movement data yet.</div>`
+                }
               </div>
             </div>
-            <!-- Slow Moving -->
+            <!-- Slow / Aging -->
             <div>
-              <h4 style="font-size: 0.85rem; color: var(--status-danger); margin-bottom: 12px;"><i class="fa-solid fa-arrow-trend-down"></i> Slow Moving / Aging</h4>
-              <div style="display: flex; flex-direction: column; gap: 8px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 8px 12px; border-radius: var(--radius-sm);">
-                  <div style="font-size: 0.85rem; font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:130px;">3-Phase AC Motor</div>
-                  <span style="font-size: 0.8rem; font-weight:700; color: var(--status-danger);">Aging: 60+ Days</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-primary); padding: 8px 12px; border-radius: var(--radius-sm);">
-                  <div style="font-size: 0.85rem; font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:130px;">ANSI Hard Hat</div>
-                  <span style="font-size: 0.8rem; font-weight:700; color: var(--status-warning);">Low Velocity</span>
-                </div>
+              <h4 style="font-size:0.82rem; color:var(--status-warning); margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-arrow-trend-down"></i> Slow Moving
+              </h4>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                ${slowMoving.length > 0
+                  ? slowMoving.map(p => {
+                      const days = p.daysSinceLastMovement;
+                      const label = days >= 999 ? 'No activity' : `${days}d idle`;
+                      const color = days > 60 ? 'var(--status-danger)' : 'var(--status-warning)';
+                      return `
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-primary); padding:8px 12px; border-radius:var(--radius-sm); gap:8px;">
+                          <div style="font-size:0.82rem; font-weight:600; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; flex:1;" title="${p.name}">${p.name}</div>
+                          <span style="font-size:0.75rem; font-weight:700; color:${color}; white-space:nowrap;">${label}</span>
+                        </div>
+                      `;
+                    }).join('')
+                  : `<div style="font-size:0.82rem; color:var(--text-subtle); padding:8px;">All products are active.</div>`
+                }
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Reorder Suggestions -->
+        ${reorderNeeded.length > 0 ? `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-rotate" style="color:var(--status-warning);"></i> Reorder Suggestions</div>
+            <button class="btn btn-secondary btn-sm" id="btn-view-purchasing"><i class="fa-solid fa-cart-plus"></i> View Procurement</button>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            ${reorderNeeded.map(p => {
+              const cat = store.getCategoryById(p.categoryId);
+              return `
+                <div style="display:flex; align-items:center; justify-content:space-between; background:var(--bg-primary); padding:10px 14px; border-radius:var(--radius-md); border-left:3px solid var(--status-warning); gap:12px;">
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:0.85rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${p.name}</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted);">${p.sku} &nbsp;·&nbsp; ${cat ? cat.name : 'Uncategorized'}</div>
+                  </div>
+                  <div style="text-align:right; flex-shrink:0;">
+                    <div style="font-size:0.82rem; font-weight:700; color:var(--status-warning);">Qty: ${p.quantity}</div>
+                    <div style="font-size:0.75rem; color:var(--text-subtle);">Reorder at: ${p.reorderLevel || p.minStock}</div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+        ` : ''}
       </div>
 
       <!-- Right Column: Recent Activity Ledger -->
@@ -258,4 +310,6 @@ export function renderDashboardView(container, navigateTo, showToast) {
   container.querySelector('#btn-quick-adjust')?.addEventListener('click', () => navigateTo('transfers'));
   container.querySelector('#btn-quick-count')?.addEventListener('click', () => navigateTo('transfers'));
   container.querySelector('#btn-view-ledger-all')?.addEventListener('click', () => navigateTo('stock'));
+  container.querySelector('#btn-view-purchasing')?.addEventListener('click', () => navigateTo('purchasing'));
 }
+
