@@ -1,7 +1,7 @@
 /**
  * ZENORA INVENTORY & SUPPLY CHAIN
  * Main Application Orchestrator & Router
- * Work. Simplified.
+ * work, simplified.
  */
 import { store } from './store.js';
 import { renderDashboardView }  from './components/dashboard.js';
