@@ -394,6 +394,15 @@ a {
   text-transform: uppercase;
 }
 
+.brand-tagline {
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--accent-primary);
+  letter-spacing: 0.2px;
+  line-height: 1.1;
+  margin: 1px 0;
+}
+
 .brand-sub {
   font-size: 0.65rem;
   font-weight: 500;

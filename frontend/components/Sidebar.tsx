@@ -92,6 +92,7 @@ export const Sidebar: React.FC = () => {
           />
           <View style={styles.brandTitleWrap}>
             <Text style={[styles.brandName, { color: colors.textMain }]}>Zenora</Text>
+            <Text style={[styles.brandTagline, { color: colors.brandAccent }]}>work, simplified.</Text>
             <Text style={[styles.brandSub, { color: colors.textMuted }]}>Inventory & Supply Chain</Text>
           </View>
           {isMobile && (
@@ -189,12 +190,18 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     textTransform: 'uppercase',
   },
-  brandSub: {
+  brandTagline: {
     fontSize: 9.5,
+    fontWeight: '600',
+    letterSpacing: 0.2,
+    marginTop: 1,
+    marginBottom: 1,
+  },
+  brandSub: {
+    fontSize: 9,
     fontWeight: '600',
     letterSpacing: 0.3,
     textTransform: 'uppercase',
-    marginTop: 2,
   },
   closeBtn: {
     padding: 4,
