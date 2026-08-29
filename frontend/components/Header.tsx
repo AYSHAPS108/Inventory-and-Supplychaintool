@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, useWindowDimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, useWindowDimensions, Platform } from 'react-native';
 import { useApp } from '../context/AppContext';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { getThemeColors } from '../styles/theme';
@@ -31,7 +31,30 @@ export const Header: React.FC = () => {
   const { theme, toggleTheme, currentRoute, currentRole, setRole, searchQuery, setSearchQuery, navigateTo, resetAllData, toggleSidebar } = useApp();
   const colors = getThemeColors(theme);
   const { width } = useWindowDimensions();
-  const isMobile = width < 768;
+
+  const [isClientMobile, setIsClientMobile] = React.useState<boolean>(() => {
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
+
+  React.useEffect(() => {
+    const checkMobile = () => {
+      if (Platform.OS === 'web' && typeof window !== 'undefined') {
+        setIsClientMobile(window.innerWidth < 768);
+      } else {
+        setIsClientMobile(width > 0 && width < 768);
+      }
+    };
+    checkMobile();
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      window.addEventListener('resize', checkMobile);
+      return () => window.removeEventListener('resize', checkMobile);
+    }
+  }, [width]);
+
+  const isMobile = isClientMobile;
 
   const meta = PAGE_META[currentRoute] || { title: 'Zenora OS', sub: 'Supply Chain Management' };
 
