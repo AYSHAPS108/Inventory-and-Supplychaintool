@@ -1,9 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, useWindowDimensions } from 'react-native';
 import { useApp } from '../context/AppContext';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { getThemeColors } from '../styles/theme';
 import { AppRoute } from '../types';
+
+const logoDark = require('../assets/zenora-icon-dark.png');
+const logoLight = require('../assets/zenora-icon-light.png');
 
 interface NavItemDef {
   route: AppRoute;
@@ -53,18 +56,20 @@ export const Sidebar: React.FC = () => {
             top: 0,
             bottom: 0,
             left: 0,
-            width: 250,
+            width: 268,
           }
         ]}
       >
         {/* Brand Header */}
         <View style={[styles.brandHeader, { borderBottomColor: colors.border }]}>
-          <View style={[styles.brandLogo, { backgroundColor: colors.brandPrimary }]}>
-            <Text style={styles.brandLogoText}>Z</Text>
-          </View>
+          <Image
+            source={theme === 'light' ? logoLight : logoDark}
+            style={styles.brandLogoImg}
+            resizeMode="contain"
+          />
           <View style={styles.brandTitleWrap}>
             <Text style={[styles.brandName, { color: colors.textMain }]}>Zenora</Text>
-            <Text style={[styles.brandSub, { color: colors.textMuted }]}>Supply Chain OS</Text>
+            <Text style={[styles.brandSub, { color: colors.textMuted }]}>Inventory & Supply Chain</Text>
           </View>
           {isMobile && (
             <TouchableOpacity onPress={toggleSidebar} style={styles.closeBtn}>
@@ -74,7 +79,7 @@ export const Sidebar: React.FC = () => {
         </View>
 
         {/* Navigation items */}
-        <ScrollView style={styles.navList} contentContainerStyle={{ paddingVertical: 12, paddingHorizontal: 10 }}>
+        <ScrollView style={styles.navList} contentContainerStyle={{ paddingVertical: 14, paddingHorizontal: 12 }}>
           {NAV_ITEMS.map(item => {
             const isActive = currentRoute === item.route;
             return (
@@ -139,36 +144,34 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   brandHeader: {
-    height: 64,
+    height: 70,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 18,
     borderBottomWidth: 1,
-    gap: 10,
+    gap: 12,
   },
-  brandLogo: {
-    width: 32,
-    height: 32,
+  brandLogoImg: {
+    width: 36,
+    height: 36,
     borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  brandLogoText: {
-    color: '#ffffff',
-    fontSize: 18,
-    fontWeight: '900',
   },
   brandTitleWrap: {
     flex: 1,
+    justifyContent: 'center',
   },
   brandName: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '800',
-    letterSpacing: -0.3,
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
   },
   brandSub: {
-    fontSize: 10,
-    fontWeight: '500',
+    fontSize: 9.5,
+    fontWeight: '600',
+    letterSpacing: 0.3,
+    textTransform: 'uppercase',
+    marginTop: 2,
   },
   closeBtn: {
     padding: 4,
