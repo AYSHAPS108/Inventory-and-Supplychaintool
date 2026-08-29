@@ -92,7 +92,7 @@ export const Sidebar: React.FC = () => {
           />
           <View style={styles.brandTitleWrap}>
             <Text style={[styles.brandName, { color: colors.textMain }]}>Zenora</Text>
-            <Text style={[styles.brandTagline, { color: colors.brandAccent }]}>work, simplified.</Text>
+            <Text style={[styles.brandTagline, { color: colors.brandAccent }]}>Work, Simplified.</Text>
             <Text style={[styles.brandSub, { color: colors.textMuted }]}>Inventory & Supply Chain</Text>
           </View>
           {isMobile && (
