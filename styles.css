@@ -386,6 +386,13 @@ a {
   line-height: 1.2;
 }
 
+.brand-name-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
 .brand-name {
   font-size: 0.9rem;
   font-weight: 800;
@@ -394,21 +401,21 @@ a {
   text-transform: uppercase;
 }
 
-.brand-tagline {
+.brand-product-name {
   font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.brand-tagline {
+  font-size: 0.65rem;
   font-weight: 500;
   color: var(--accent-primary);
   letter-spacing: 0.2px;
   line-height: 1.1;
-  margin: 1px 0;
-}
-
-.brand-sub {
-  font-size: 0.65rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
+  margin-top: 2px;
 }
 
 .sidebar-nav {

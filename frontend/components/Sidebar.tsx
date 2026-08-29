@@ -91,9 +91,11 @@ export const Sidebar: React.FC = () => {
             resizeMode="contain"
           />
           <View style={styles.brandTitleWrap}>
-            <Text style={[styles.brandName, { color: colors.textMain }]}>Zenora</Text>
+            <View style={styles.brandNameRow}>
+              <Text style={[styles.brandName, { color: colors.textMain }]}>Zenora</Text>
+              <Text style={[styles.brandProductName, { color: colors.textMuted }]}>Inventory & Supplychain Tool</Text>
+            </View>
             <Text style={[styles.brandTagline, { color: colors.brandAccent }]}>Work, Simplified.</Text>
-            <Text style={[styles.brandSub, { color: colors.textMuted }]}>Inventory & Supply Chain</Text>
           </View>
           {isMobile && (
             <TouchableOpacity onPress={toggleSidebar} style={styles.closeBtn}>
@@ -184,24 +186,29 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  brandNameRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    flexWrap: 'wrap',
+    columnGap: 5,
+  },
   brandName: {
-    fontSize: 14,
+    fontSize: 13.5,
     fontWeight: '800',
     letterSpacing: 0.5,
+    textTransform: 'uppercase',
+  },
+  brandProductName: {
+    fontSize: 9,
+    fontWeight: '600',
+    letterSpacing: 0.3,
     textTransform: 'uppercase',
   },
   brandTagline: {
     fontSize: 9.5,
     fontWeight: '600',
     letterSpacing: 0.2,
-    marginTop: 1,
-    marginBottom: 1,
-  },
-  brandSub: {
-    fontSize: 9,
-    fontWeight: '600',
-    letterSpacing: 0.3,
-    textTransform: 'uppercase',
+    marginTop: 2,
   },
   closeBtn: {
     padding: 4,
